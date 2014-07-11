@@ -1,0 +1,19 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-5 col-xs-6 col-xs-offset-3 logo">
+
+			{output}
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 reg-heading">
+			<h1>Dashboard</h1>
+			{loop:content}
+				{api_key}
+			{/loop}
+			<a href="{yoursite}add" class="btn btn-primary">Register username</a>
+		</div>
+	</div>
+</div>
+

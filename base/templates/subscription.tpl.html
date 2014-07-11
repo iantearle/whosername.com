@@ -1,0 +1,36 @@
+<div class="register">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2 col-sm-offset-5 col-xs-6 col-xs-offset-3 logo">
+
+				{output}
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 reg-heading">
+				<h1>Start your Subscription</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+
+				<form method="POST">
+				<input type="hidden" name="subscribe">
+				<script
+					src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+					data-key="{stripe_publishable_key}"
+					data-amount="{amount}"
+					data-label="Subscribe with card"
+					data-name="Whosername"
+					data-description="Yearly subscription"
+					data-panel-label="Subscribe ({#{{amount}}#})"
+					data-currency="{currency}"
+					data-image="/128x128.png">
+				</script>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>

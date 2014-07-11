@@ -1,0 +1,19 @@
+{
+    "name": "iantearle/whosername.com",
+    "authors": [
+        {
+            "name": "Ian Tearle",
+            "email": "ian@iantearle.com"
+        }
+    ],
+    "require": {
+		"vlucas/phpdotenv": "*",
+        "mandrill/mandrill": "1.0.*",
+        "robmorgan/phinx": "*",
+        "hashids/hashids": "0.3.*@dev",
+        "slim/slim": "2.*",
+        "slim/views": "0.1.*",
+        "stripe/stripe-php": "1.*",
+        "little-polar-apps/ets": "dev-master"
+    }
+}
