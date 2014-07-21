@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ff818c5be4e995a3806c7d7151564e92",
+    "hash": "a071334223bd7d0c8ae5ba10c3545a12",
     "packages": [
         {
             "name": "hashids/hashids",
@@ -89,6 +89,51 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "PHP Easy Template System",
             "time": "2014-06-26 14:00:34"
+        },
+        {
+            "name": "little-polar-apps/ets-view",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Little-Polar-Apps/ets-view.git",
+                "reference": "15a284601a01b76bf4ce235447ca23ae138b9548"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Little-Polar-Apps/ets-view/zipball/15a284601a01b76bf4ce235447ca23ae138b9548",
+                "reference": "15a284601a01b76bf4ce235447ca23ae138b9548",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "slim/slim": ">=2.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "installer-paths": {
+                    "vendor/slim/views/Slim/Views/{$name}": [
+                        "vendor/package"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ian Tearle",
+                    "email": "ian@littlepolarapps.com",
+                    "homepage": "http://iantearle.com/"
+                }
+            ],
+            "description": "PHP Easy Template System View Parser package for the Slim Framework",
+            "keywords": [
+                "extensions",
+                "slimphp",
+                "templating"
+            ],
+            "time": "2014-07-11 10:11:47"
         },
         {
             "name": "mandrill/mandrill",
@@ -652,7 +697,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "hashids/hashids": 20,
-        "little-polar-apps/ets": 20
+        "little-polar-apps/ets": 20,
+        "little-polar-apps/ets-view": 20
     },
     "platform": [
 
