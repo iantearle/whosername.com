@@ -136,7 +136,7 @@ $app->get('/logout', function () use ($login, $app) {
 
 $app->map('/register', function () use ($login, $app) {
 
-	$app->view->user_vars['main']['registration_successful'] = isset($_GET['verification_code']) || $login->isRegistrationSuccessful();
+	$app->view->user_vars['main']['registration_successful'] = isset($_GET['verification_code']) && $login->isRegistrationSuccessful();
 
 	$app->render('register.tpl.html');
 
@@ -148,9 +148,14 @@ $app->map('/forgot', function () use ($app) {
 
 })->via('GET', 'POST');
 
-$app->map('/add', function () use ($app) {
+$app->map('/add', function () use ($app, $login) {
 
-	$app->render('add.tpl.html');
+	if($login->isUserLoggedIn()) {
+		$app->render('add.tpl.html');
+	} else {
+		$app->flash('error', 'Login required');
+        $app->redirect('/login');
+	}
 
 })->via('GET', 'POST');
 
@@ -168,6 +173,8 @@ $app->get('/api/:api_key/:url', function ($api_key, $url) use ($content, $hashid
 		$app->view->set('content', PrepareContent::getResults($hash, $url));
 		$app->response()->header('Content-Type', 'application/json');
 		$app->render(array('api.tpl.html'));
+	} else {
+		$app->notFound();
 	}
 
 });

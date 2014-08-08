@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ivanakimov/hashids.php.git",
-                "reference": "8587e301d86217666d341e8c68ee3051ef23aaaa"
+                "reference": "11895b4c33cc390d7faa4aab40f4cd17f05b23a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ivanakimov/hashids.php/zipball/8587e301d86217666d341e8c68ee3051ef23aaaa",
-                "reference": "8587e301d86217666d341e8c68ee3051ef23aaaa",
+                "url": "https://api.github.com/repos/ivanakimov/hashids.php/zipball/11895b4c33cc390d7faa4aab40f4cd17f05b23a2",
+                "reference": "11895b4c33cc390d7faa4aab40f4cd17f05b23a2",
                 "shasum": ""
             },
             "require": {
@@ -61,7 +61,7 @@
                 "obfuscate",
                 "youtube"
             ],
-            "time": "2014-06-04 01:56:32"
+            "time": "2014-07-22 05:42:05"
         },
         {
             "name": "little-polar-apps/ets",
@@ -96,17 +96,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Little-Polar-Apps/ets-view.git",
-                "reference": "15a284601a01b76bf4ce235447ca23ae138b9548"
+                "reference": "5a1c2a009e1e8057ecfbafe944da88f24b8a6357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Little-Polar-Apps/ets-view/zipball/15a284601a01b76bf4ce235447ca23ae138b9548",
-                "reference": "15a284601a01b76bf4ce235447ca23ae138b9548",
+                "url": "https://api.github.com/repos/Little-Polar-Apps/ets-view/zipball/5a1c2a009e1e8057ecfbafe944da88f24b8a6357",
+                "reference": "5a1c2a009e1e8057ecfbafe944da88f24b8a6357",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "slim/slim": ">=2.4.0"
+                "slim/slim": ">=2.4.0",
+                "slim/views": ">=0.1.0"
             },
             "type": "library",
             "extra": {
@@ -114,6 +115,11 @@
                     "vendor/slim/views/Slim/Views/{$name}": [
                         "vendor/package"
                     ]
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Ets": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -133,7 +139,7 @@
                 "slimphp",
                 "templating"
             ],
-            "time": "2014-07-11 10:11:47"
+            "time": "2014-07-14 08:31:06"
         },
         {
             "name": "mandrill/mandrill",
@@ -318,7 +324,7 @@
                 {
                     "name": "Andrew Smith",
                     "email": "a.smith@silentworks.co.uk",
-                    "homepage": "http://thoughts.silentworks.co.uk/"
+                    "homepage": "http://www.silentworks.co.uk/"
                 },
                 {
                     "name": "Josh Lockhart",
@@ -337,16 +343,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v1.16.0",
+            "version": "v1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "9401a361fa0323935002aa96f46983f9ecd880bb"
+                "reference": "281c5b2717b50bc4cc8c4842b13856ff3431c878"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/9401a361fa0323935002aa96f46983f9ecd880bb",
-                "reference": "9401a361fa0323935002aa96f46983f9ecd880bb",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/281c5b2717b50bc4cc8c4842b13856ff3431c878",
+                "reference": "281c5b2717b50bc4cc8c4842b13856ff3431c878",
                 "shasum": ""
             },
             "require": {
@@ -381,21 +387,21 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2014-06-18 00:21:25"
+            "time": "2014-08-01 05:58:56"
         },
         {
             "name": "symfony/class-loader",
-            "version": "v2.5.1",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9"
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9",
-                "reference": "6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/25b74b67d455268415d7d34b41f8b7df4cb33ba4",
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4",
                 "shasum": ""
             },
             "require": {
@@ -421,33 +427,31 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/config",
-            "version": "v2.5.1",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "94f0c86c76a74ec9d09ef361e1476d5a66be9ff2"
+                "reference": "8d044668c7ccb4ade684e368d910e3aadcff6f6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/94f0c86c76a74ec9d09ef361e1476d5a66be9ff2",
-                "reference": "94f0c86c76a74ec9d09ef361e1476d5a66be9ff2",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/8d044668c7ccb4ade684e368d910e3aadcff6f6c",
+                "reference": "8d044668c7ccb4ade684e368d910e3aadcff6f6c",
                 "shasum": ""
             },
             "require": {
@@ -471,33 +475,31 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-08-05 09:00:40"
         },
         {
             "name": "symfony/console",
-            "version": "v2.5.1",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "2e3df33dd72a9cdef7e9745d930e29ff844fe055"
+                "reference": "cd2d1e4bac2206b337326b0140ff475fe9ad5f63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/2e3df33dd72a9cdef7e9745d930e29ff844fe055",
-                "reference": "2e3df33dd72a9cdef7e9745d930e29ff844fe055",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/cd2d1e4bac2206b337326b0140ff475fe9ad5f63",
+                "reference": "cd2d1e4bac2206b337326b0140ff475fe9ad5f63",
                 "shasum": ""
             },
             "require": {
@@ -528,33 +530,31 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-08-05 09:00:40"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.5.1",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "92d5e2f4ebc89fa7573688caffa2363ed995843d"
+                "reference": "c1309b0ee195ad264a4314435bdaecdfacb8ae9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/92d5e2f4ebc89fa7573688caffa2363ed995843d",
-                "reference": "92d5e2f4ebc89fa7573688caffa2363ed995843d",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/c1309b0ee195ad264a4314435bdaecdfacb8ae9c",
+                "reference": "c1309b0ee195ad264a4314435bdaecdfacb8ae9c",
                 "shasum": ""
             },
             "require": {
@@ -577,33 +577,31 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.5.1",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "1057e87364c0b38b50f5695fc9df9dd189036bec"
+                "reference": "5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/1057e87364c0b38b50f5695fc9df9dd189036bec",
-                "reference": "1057e87364c0b38b50f5695fc9df9dd189036bec",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f",
+                "reference": "5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f",
                 "shasum": ""
             },
             "require": {
@@ -626,19 +624,17 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-08-05 09:00:40"
         },
         {
             "name": "vlucas/phpdotenv",

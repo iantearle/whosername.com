@@ -38,7 +38,7 @@ class PrepareContent {
 
 		$content = new stdClass();
 
-		$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, 400, 500, 600, 700, 800);
+		$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, $user_id * 3, 600, 700, 800);
 
 		return $content;
 
@@ -65,8 +65,6 @@ class PrepareContent {
 			$content[$k]->linkedin = $itemObj->names_linkedin;
 			$content[$k]->googleplus = $itemObj->names_googleplus;
 		}
-
-
 
 		$content->hash = $hash;
 
