@@ -696,6 +696,7 @@
         "little-polar-apps/ets": 20,
         "little-polar-apps/ets-view": 20
     },
+    "prefer-stable": false,
     "platform": [
 
     ],

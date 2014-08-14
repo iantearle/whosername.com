@@ -10,7 +10,7 @@
 		<div class="col-sm-12 reg-heading">
 			<h1>Dashboard</h1>
 			{loop:content}
-				{api_key}
+				<input type="text" class="form-control input-xlarge readonly-input" value="{api_key}" readonly onclick="this.select()">
 			{/loop}
 			<a href="{yoursite}add" class="btn btn-primary">Register username</a>
 		</div>

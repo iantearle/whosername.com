@@ -33,12 +33,14 @@ class PrepareContent {
 	}
 
 	public static function getDetails($user_id) {
-
+		global $options; 
+		
 		$hashids = new Hashids\Hashids('Who am I');
 
 		$content = new stdClass();
-
-		$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, $user_id * 3, 600, 700, 800);
+		if($options->getOption('stripe_sub_customer')) {
+			$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, $user_id * 3, 600, 700, 800);
+		}
 
 		return $content;
 

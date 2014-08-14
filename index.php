@@ -26,7 +26,7 @@ $addExtras  = new stdClass();
 $hashids 	= new Hashids\Hashids('Who am I');
 
 $app->config(array(
-	'view' => new \Slim\Views\Ets(),
+	'view' => new Ets(),
     'templates.path' => 'base/templates'
 ));
 
@@ -40,7 +40,7 @@ if($login->isUserLoggedIn()) {
 
 	$user_id = $login->getUserId();
 
-	$options = new Options(array_merge($database->get_user_options($user_id), array(array("user_id" => (int) $login->getUserId()))));
+	$options = new Options(array_merge(array(array("user_id" => (int) $login->getUserId())), $database->get_user_options($user_id)));
 
 	foreach($options as $optname => $optval) {
 
@@ -71,11 +71,13 @@ $addExtras->amount = AMOUNT;
 $addExtras->currency = CURRENCY;
 
 foreach($addExtras as $xp => $xv) {
+	
 	$header->{$xp} = $xv;
 	$footer->{$xp} = $xv;
 	$menu->{$xp} = $xv;
 	$xmlvars[$xp] = $xv;
 	$content->{$xp} = $xv;
+	
 }
 
 $app->view->set('options', $options);
@@ -92,23 +94,15 @@ $app->view->user_vars['main']['captcha'] = WORDING_REGISTRATION_CAPTCHA;
 $app->view->user_vars['main']['remember_me'] = WORDING_REMEMBER_ME;
 $app->view->user_vars['main']['output'] = OutputMessages::showMessage();
 
+
 $app->map('/', function () use ($options, $login, $app) {
 
 
 	if($login->isUserLoggedIn()) {
 
-		if(!$options->getOption('stripe_sub_customer')) {
-
-			$app->view->user_vars['header']['title'] = 'Start your subscription';
-			$app->render('subscription.tpl.html');
-
-		} else {
-
-			$app->view->user_vars['header']['title'] = 'Dashboard';
-			$app->view->set('content', PrepareContent::getDetails($login->getUserId()));
-			$app->render('dashboard.tpl.html');
-
-		}
+		$app->view->user_vars['header']['title'] = 'Dashboard';
+		$app->view->set('content', PrepareContent::getDetails($login->getUserId()));
+		$app->render('dashboard.tpl.html');
 
 	} else {
 
@@ -119,11 +113,13 @@ $app->map('/', function () use ($options, $login, $app) {
 
 })->via('GET', 'POST');
 
+
 $app->map('/login', function () use ($app) {
 
 	$app->render('login.tpl.html');
 
 })->via('GET', 'POST');
+
 
 $app->get('/logout', function () use ($login, $app) {
 
@@ -134,13 +130,17 @@ $app->get('/logout', function () use ($login, $app) {
 
 });
 
+
 $app->map('/register', function () use ($login, $app) {
 
-	$app->view->user_vars['main']['registration_successful'] = isset($_GET['verification_code']) && $login->isRegistrationSuccessful();
+	$app->view->user_vars['main']['registration_successful'] = (isset($_GET['verification_code']) || $login->isRegistrationSuccessful() && 
+   (ALLOW_USER_REGISTRATION || (ALLOW_ADMIN_TO_REGISTER_NEW_USER && $_SESSION['user_access_level'] == 255))) ? true : null;
+	$app->view->user_vars['main']['registration_verified'] = (isset($_GET['verification_code'])) ? true : null;
 
 	$app->render('register.tpl.html');
 
 })->via('GET', 'POST');
+
 
 $app->map('/forgot', function () use ($app) {
 
@@ -148,16 +148,63 @@ $app->map('/forgot', function () use ($app) {
 
 })->via('GET', 'POST');
 
-$app->map('/add', function () use ($app, $login) {
 
+$app->map('/add', function () use ($app, $login) {
+	
+	$app->view->user_vars['header']['title'] = 'Add a username';
+	
 	if($login->isUserLoggedIn()) {
+	
 		$app->render('add.tpl.html');
+		
 	} else {
+	
 		$app->flash('error', 'Login required');
-        $app->redirect('/login');
+		$app->redirect('/login');
+        
 	}
 
 })->via('GET', 'POST');
+
+
+$app->map('/subscription', function() use($app, $login, $options) {
+		
+	if($login->isUserLoggedIn()) {
+	
+		if(!$options->getOption('stripe_sub_customer')) {
+
+			$app->view->user_vars['header']['title'] = 'Start your subscription';
+			$app->render('subscription.tpl.html');
+
+		} else {
+		
+			$app->redirect('/');
+			
+		}
+		
+	}
+	
+})->via('GET', 'POST');
+
+
+$app->get('/my-api', function() use($app, $login, $options) {
+		
+	if($login->isUserLoggedIn()) {
+	
+		if($options->getOption('stripe_sub_customer')) {
+
+			$app->view->user_vars['header']['title'] = 'My API';
+			$app->render('my-api.tpl.html');
+
+		} else {
+		
+			$app->redirect('/subscription');
+			
+		}
+	}
+	
+});
+
 
 $app->get('/api/:api_key/:url', function ($api_key, $url) use ($content, $hashids, $database, $app) {
 
@@ -170,13 +217,18 @@ $app->get('/api/:api_key/:url', function ($api_key, $url) use ($content, $hashid
 	$count = $database->rowCount();
 
 	if($count) {
+	
 		$app->view->set('content', PrepareContent::getResults($hash, $url));
 		$app->response()->header('Content-Type', 'application/json');
 		$app->render(array('api.tpl.html'));
+		
 	} else {
+	
 		$app->notFound();
+		
 	}
 
 });
+
 
 $app->run();
