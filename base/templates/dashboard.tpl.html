@@ -7,12 +7,34 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-12 reg-heading">
+		<div class="col-sm-12">
 			<h1>Dashboard</h1>
 			{loop:content}
-				<input type="text" class="form-control input-xlarge readonly-input" value="{api_key}" readonly onclick="this.select()">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="chart-label">Added Websites</div>
+					<div class="chart" data-percent="{saved_names}">
+						<span>{saved_names}</span>
+					</div>
+				</div>
+				{set:api_key}
+				<div class="col-sm-2">
+					<div class="chart-label">Your API key</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group api-key">
+						<input type="text" class="form-control input-lg readonly-input" value="{api_key}" readonly onclick="this.select()">
+					</div>
+				</div>
+				{/set}
+			</div>
 			{/loop}
-			<a href="{yoursite}add" class="btn btn-primary">Register username</a>
+			<hr>
+			<div class="row">
+				<div class="col-sm-8 col-sm-offset-2">
+					<a href="{yoursite}add" class="btn btn-block btn-lg btn-primary">Pair a website<span class="visible-md-inline visible-lg-inline"> to social usernames</span></a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
