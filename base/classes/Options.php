@@ -130,8 +130,8 @@ class Options {
 		foreach($option as $op) {
 
 			$database->query("DELETE FROM options WHERE user_id = :user_id AND id = :option_id");
-			$database->bind(":user_id", $op['user_id']);
-			$database->bind(":option_id", $op['id']);
+			$database->bind(":user_id", $op->user_id);
+			$database->bind(":option_id", $op->id);
 			$database->execute();
 
 		}
