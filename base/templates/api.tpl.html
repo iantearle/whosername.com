@@ -1,9 +1,46 @@
+{set:type:xml}<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 {loop:content}
-[{
-	"hash": "{hash}",
-	"twitter": "{twitter}",
-	"facebook": "{facebook}",
-	"linkedin": "{linkedin}",
-	"googleplus": "{googleplus}"
-}]
+<response>
+	<id>{input}</id>
+	<hash>{hash}</hash>
+	<properties>
+		<property url="{url}">{url}</property>
+		<property twitter="{twitter}">{twitter}</property>
+		<property facebook="{facebook}">{facebook}</property>
+		<property linkedin="{linkedin}">{linkedin}</property>
+		<property googleplus="{googleplus}">{googleplus}</property>
+	</properties>
+</response>
 {/loop}
+{mis:content}
+<response>
+	<status>
+		<code>404</code>
+		<message>Not found</message>
+	</status>
+</response>
+{/mis}
+{/set}
+{set:type:json}
+{loop:content}
+"object":[{
+	"id": "{input}",
+	"hash": "{hash}",
+	"properties": {
+		"url": "{url}",
+		"twitter": "{twitter}",
+		"facebook": "{facebook}",
+		"linkedin": "{linkedin}",
+		"googleplus": "{googleplus}"
+	}
+}]{set:_not_last},{/set}
+{/loop}
+{mis:content}
+	{
+		"error": {
+			"code": 404,
+			"message": "Not found"
+		}
+	}
+{/mis}
+{/set}
