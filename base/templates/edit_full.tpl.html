@@ -1,0 +1,34 @@
+<div class="register">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 logo">
+
+				{output}
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12" id="edit-list">
+				<h1>Current paired websites and usernames</h1>
+				<div class="form-group">
+					<input class="search form-control" placeholder="Search" />
+				</div>
+				<ul class="nav nav-pills nav-stacked list">
+				{loop:content}
+					<li class="url">
+						<a href="{permalink}"><b>{url}</b>
+						{set:twitter}<span class="label label-twitter">{twitter}</span> {/set}
+						{set:facebook}<span class="label label-facebook">{facebook}</span> {/set}
+						{set:linkedin}<span class="label label-linkedin">{linkedin}</span> {/set}
+						{set:googleplus}<span class="label label-googleplus">{googleplus}</span>{/set}
+						</a>
+					</li>
+				{/loop}
+				</ul>
+
+			</div>
+		</div>
+
+	</div>
+</div>
