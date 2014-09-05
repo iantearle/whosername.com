@@ -3,44 +3,21 @@
 			 <div class="row">
 				<h5><a href="{yoursite}">Whosername</a></h5>
 				<div class="col-xs-12">
-					<p><small><strong>&copy; {copyrightdate}. &Beta;0.1.</strong> <a href="{yoursite}changelog">View our changelog.</a></small></p>
+					<p><small>A tiny web app by <a href="http://littlepolarapps.com" title="Little Polar Apps">Little Polar Apps</a></small></p>
+					<p><small><strong>&copy; {copyrightdate}. {version}</strong> <a href="{yoursite}changelog">View our changelog.</a><br>
+					Hosted by <a href="http://mdtm.pl/1uowRx6" title="(mt) Media Temple">(mt) Media Temple</a></small></p>
 				</div>
 			</div>
 		</div>
+		<div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+
+                </div>
+            </div>
+        </div>
 	</div>
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrolldepth/0.4/jquery.scrolldepth.min.js"></script>
-	<script src="{javascript_link}"></script>
-	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-	<script type="text/javascript">
-		// This identifies your website in the createToken call below
-		Stripe.setPublishableKey('{stripe_publishable_key}');
-
-		Stripe.card.createToken({
-			number: $('.card-number').val(),
-			cvc: $('.card-cvc').val(),
-			exp_month: $('.card-expiry-month').val(),
-			exp_year: $('.card-expiry-year').val()
-		}, stripeResponseHandler);
-
-		function stripeResponseHandler(status, response) {
-			var $form = $('#payment-form');
-
-			if(response.error) {
-				// Show the errors on the form
-				$form.find('.payment-errors').text(response.error.message);
-				$form.find('button').prop('disabled', false);
-			} else {
-				// response contains id and card, which contains additional card details
-				var token = response.id;
-				// Insert the token into the form so it gets submitted to the server
-				$form.append($('<input type="hidden" name="stripeToken" />').val(token));
-				// and submit
-				$form.get(0).submit();
-			}
-		}
-	</script>
+	<script src="{yoursite}javascript/jquery-1.11.1.min.js,bootstrap.min.js,list.min.js,jquery.easypiechart.js,javascript.js"></script>
 </body>
 </html>
