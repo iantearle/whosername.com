@@ -33,14 +33,32 @@ class PrepareContent {
 	}
 
 	public static function getDetails($user_id) {
-		global $options; 
-		
-		$hashids = new Hashids\Hashids('Who am I');
 
-		$content = new stdClass();
+		global $hashids, $options, $content, $database;
+
 		if($options->getOption('stripe_sub_customer')) {
 			$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, $user_id * 3, 600, 700, 800);
 		}
+
+		// Get the largest created date (latest) as usernames and websites may be live on multiple results
+		$database->query("SELECT * FROM `names` t JOIN (SELECT names_url, MAX(names_created) maxVal FROM `names` GROUP BY names_url) t2 ON t.names_created = t2.maxVal AND t.names_url = t2.names_url AND user_id = :user_id");
+		$database->bind(":user_id", $user_id);
+		$database->execute();
+
+		$user_names_records = $database->resultset();
+
+		$content->saved_names = count($user_names_records);
+
+		return $content;
+
+	}
+
+	public static function getSettings($user_id) {
+
+		global $hashids, $options, $content, $database;
+
+		$content->change_emails = $options->getOption('change_emails');
+		$content->subscribed = $options->getOption('subsribe');
 
 		return $content;
 
@@ -49,26 +67,77 @@ class PrepareContent {
 
 	public static function getResults($hash, $url) {
 
-		global $hashids;
-		$database = new Database();
+		global $hashids, $content, $database;
 
-		$user_id = $hashids->decrypt($hash);
+		$page = $content;
 
-		$database->query("SELECT * FROM `names` WHERE names_url = :url  AND names_created = (SELECT MAX(names_created) FROM `names`) AND names_live = 1");
+		// Get the largest created date (latest) as usernames and websites may be live on multiple results
+		$database->query("SELECT * FROM `names` t JOIN (SELECT names_url, MAX(names_created) maxVal FROM `names` WHERE names_live = 1 GROUP BY names_url) t2 ON t.names_created = t2.maxVal AND t.names_url = t2.names_url AND :url IN(t.names_url, names_twitter, names_facebook, names_linkedin, names_googleplus)");
 		$database->bind(":url", $url);
 		$database->execute();
 
-		$content = new stdClass();
 		$content = $database->resultset();
 
 		foreach($content as $k=>$itemObj) {
+
+			$content[$k]->input = $url;
 			$content[$k]->twitter = $itemObj->names_twitter;
 			$content[$k]->facebook = $itemObj->names_facebook;
 			$content[$k]->linkedin = $itemObj->names_linkedin;
 			$content[$k]->googleplus = $itemObj->names_googleplus;
+			$content[$k]->url = $itemObj->names_url;
+			$content[$k]->hash = $hash;
+
+			foreach($page as $i=>$itemObj) {
+				$content[$k]->{$i} = $itemObj;
+			}
+
 		}
 
-		$content->hash = $hash;
+		return $content;
+
+	}
+
+	public static function getResultsForEdit($id=null) {
+
+		global $content, $database;
+
+		$page = &$content;
+
+		if($id) {
+
+			$statement = 'SELECT * FROM `names` WHERE id = :id AND names_live = 1';
+
+		} else {
+
+			$statement = 'SELECT * FROM `names` t JOIN (SELECT names_url, MAX(names_created) maxVal FROM `names` WHERE names_live = 1 GROUP BY names_url) t2 ON t.names_created = t2.maxVal AND t.names_url = t2.names_url';
+
+		}
+
+		// Get the largest created date (latest) as usernames and websites may be live on multiple results
+		$database->query($statement);
+
+
+		if($statement) {
+
+			$database->bind(":id", $id);
+
+		}
+
+		$database->execute();
+
+		$content = $database->resultset();
+
+		foreach($content as $k=>$itemObj) {
+
+			$content[$k]->url = $itemObj->names_url;
+			$content[$k]->twitter = $itemObj->names_twitter;
+			$content[$k]->facebook = $itemObj->names_facebook;
+			$content[$k]->linkedin = $itemObj->names_linkedin;
+			$content[$k]->googleplus = $itemObj->names_googleplus;
+			$content[$k]->permalink = YOURSITE . 'edit/' . $itemObj->id;
+
+		}
 
 		return $content;
 
