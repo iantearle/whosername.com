@@ -50,17 +50,17 @@ if($_POST) {
 			}
 
 			$token = $_POST['stripeToken'];
-			
+
 			$customer = Stripe_Customer::create(array(
 				"description" => "Customer for " . $login->getUserEmail(),
 				"card" => $token // obtained with Stripe.js
 			));
-			
+
 			$cu = Stripe_Customer::retrieve($customer->id);
 			$cu->subscriptions->create(array("plan" => "whosername12"));
-				
+
 			$options->setOption('stripe_sub_customer', $customer->id);
-			
+
 			$app->view->user_vars['main']['payment_successful'] = true;
 			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			OutputMessages::setMessage('Your payment was successful.', 'success');
@@ -73,6 +73,26 @@ if($_POST) {
 			exit;
 
 		}
+
+	}
+
+	if(isset($_POST['settings'])) {
+
+		if(isset($_POST['change_emails']) && $_POST['change_emails'] == 1) {
+			$options->setOption('change_emails', 1);
+		} else {
+			$options->deleteOption('change_emails');
+		}
+
+		if(isset($_POST['subsribe']) && $_POST['subsribe'] == 1) {
+			$options->setOption('subsribe', 1);
+		} else {
+			$options->deleteOption('subsribe');
+		}
+
+		header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+		OutputMessages::setMessage('Settings saved successfully.', 'success');
+		exit;
 
 	}
 
@@ -150,7 +170,21 @@ if($_POST) {
 			$googleplus = $_POST['googleplus'];
 
 		}
-		
+
+		$checkAmount = 0;
+		$checks = array($url, $twitter, $facebook, $linkedin, $googleplus);
+		foreach($checks as $check) {
+			if(trim($check) == '') {
+				$checkAmount ++;
+			}
+		}
+
+		if($checkAmount >= 4) {
+			OutputMessages::setMessage('<b>A username has to be associated</b><br>At least one username must be entered. Having trouble? Try our support channels', 'danger');
+			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+			exit;
+		}
+
 		try {
 			$database->query("INSERT INTO names (user_id, names_url, names_twitter, names_facebook, names_linkedin, names_googleplus, names_created) VALUES (:user_id, :url, :twitter, :facebook, :linkedin, :googleplus, :created)");
 			$database->bind(":user_id", $login->getUserId());
@@ -161,19 +195,19 @@ if($_POST) {
 			$database->bind(":googleplus", $googleplus);
 			$database->bind(":created", time());
 			$database->execute();
-						
+
 			OutputMessages::setMessage('<b>Super</b>. That\'s another username added to the list.', 'success');
-			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+			header('Location: http://' . $_SERVER['HTTP_HOST'] . '/edit', true, 303);
 			exit;
-			
+
 		} catch(Exception $e) {
-		
+
 			OutputMessages::setMessage('<b>We failed to save that, with the following error.</b><br>' . $e->getMessage(), 'danger');
 			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
-			exit;			
+			exit;
 		}
 
 	}
 
-	
+
 }
