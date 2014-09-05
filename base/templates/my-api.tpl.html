@@ -1,0 +1,150 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-5 col-xs-6 col-xs-offset-3 logo">
+
+			{output}
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>API</h1>
+			{loop:content}
+			<div class="row">
+				{set:api_key}
+				<div class="col-sm-2">
+					<div class="chart-label">Your API key</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group api-key">
+						<input type="text" class="form-control input-lg readonly-input" value="{api_key}" readonly onclick="this.select()">
+					</div>
+				</div>
+				<div class="col-sm-5">
+					<div class="chart-label">API Health </div>
+					<span class="label label-success pull-right health">healthy</span>
+
+				</div>
+				{/set}
+			</div>
+			{/loop}
+			<hr>
+		</div>
+	</div>
+</div>
+<div class="container">
+
+    <h2>Friendly API Documentation</h2>
+    <p class="lead">
+        The how to on accessing the website for a particular username, or vice versa.
+    </p>
+
+    <div class="alert alert-info">
+        <h4>Early alpha version, beware</h4>
+        <p>This version of the API is an early alpha version and could be subject to change.</p>
+        <p>Whosername will always make you aware in advance of any changes that could affect your application usage of the API.</p>
+    </div>
+
+    <hr />
+
+    <div class="method">
+        <div class="row margin-0 list-header hidden-sm hidden-xs">
+            <div class="col-md-3"><div class="header">Property</div></div>
+            <div class="col-md-2"><div class="header">Type</div></div>
+            <div class="col-md-2"><div class="header">Required</div></div>
+            <div class="col-md-5"><div class="header">Description</div></div>
+        </div>
+
+        <div class="row margin-0">
+            <div class="col-md-3">
+                <div class="cell">
+                    <div class="propertyname">
+                        API Key  <span class="mobile-isrequired">[Required]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="type">
+                        <code>String</code>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="isrequired">
+                        Yes
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="cell">
+                    <div class="description">
+                        Your unique private API key
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-0">
+            <div class="col-md-3">
+                <div class="cell">
+                    <div class="propertyname">
+                        Lookup  <span class="mobile-isrequired">[Required]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="type">
+                        <code>String</code>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="isrequired">
+                        Yes
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="cell">
+                    <div class="description">
+                        The URL of the website or the username you are querying, omitting the protocol
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-0">
+            <div class="col-md-3">
+                <div class="cell">
+                    <div class="propertyname">
+                        Format  <span class="mobile-isrequired">[Required]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="type">
+                        <code>String</code>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="cell">
+                    <div class="isrequired">
+                        Yes
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="cell">
+                    <div class="description">
+                        One of JSON or XML
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

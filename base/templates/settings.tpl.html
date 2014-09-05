@@ -1,0 +1,39 @@
+<div class="settings">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 logo">
+
+				{output}
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Settings</h1>
+				{loop:content}
+				<form method="post">
+					<input type="hidden" name="change_emails" value="0">
+					<input type="hidden" name="subscribe" value="0">
+
+					<div class="row">
+						<div class="col-sm-8 col-sm-offset-2">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="change_emails" value="1"{set:change_emails} checked{/set}> Send me change alerts
+								</label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="subscribe" value="1"{set:subscribed} checked{/set}> Subscribe me to the newsletter
+								</label>
+							</div>
+							<hr>
+							<button type="submit" class="btn btn-primary btn-block btn-lg" name="settings">Save</button>
+						</div>
+					</div>
+				</form>
+				{/loop}
+			</div>
+		</div>
+	</div>
+</div>
