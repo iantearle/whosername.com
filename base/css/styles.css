@@ -22,7 +22,7 @@ header {
 	margin-bottom: 50px;
 }
 header.full {
-	height: 600px;
+	height: 500px;
 }
 header.full p {
 	text-align: center;
@@ -106,8 +106,11 @@ header.full .navbar-who {
 	color: #fff;
 	text-shadow: 0 1px 0 rgba(0,91,103,.3);
 	display: inline-block;
+	text-align: center;
 }
-
+.navbar-toggle i {
+	color: #fff;
+}
 .nav.navbar-nav>li>a, .nav.navbar-nav>li>a {
 	border: 1px solid transparent;
 	border-radius: 5px;
@@ -132,7 +135,6 @@ header.full .navbar-who {
         width: 260px;
 		height: 80px;
 		line-height: 40px;
-        text-align: center;
     }
     .navbar>.container .navbar-brand-centered,
     .navbar>.container-fluid .navbar-brand-centered {
@@ -140,10 +142,8 @@ header.full .navbar-who {
     }
 }
 @media (max-width: 480px) {
-	header.full .navbar-who {
-		header.full {
-			height: 200px;
-		}
+	header.full {
+		height: auto;
 	}
 }
 
