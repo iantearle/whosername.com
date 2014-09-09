@@ -91,9 +91,9 @@ define("EMAIL_SMTP_ENCRYPTION", "tls");
  * Set the absolute URL to password_reset.php, necessary for email password reset links
  */
 define("EMAIL_PASSWORDRESET_URL", getenv('YOURSITE') . "forgot");
-define("EMAIL_PASSWORDRESET_FROM", "no-reply@iantearle.com");
-define("EMAIL_PASSWORDRESET_FROM_NAME", "Creator");
-define("EMAIL_PASSWORDRESET_SUBJECT", "Password reset for Creator");
+define("EMAIL_PASSWORDRESET_FROM", "support@littlepolarapps.com");
+define("EMAIL_PASSWORDRESET_FROM_NAME", "Whosername");
+define("EMAIL_PASSWORDRESET_SUBJECT", "Password reset for Whosername");
 define("EMAIL_PASSWORDRESET_CONTENT", "Please click on this link to reset your password:");
 
 /**
@@ -101,9 +101,9 @@ define("EMAIL_PASSWORDRESET_CONTENT", "Please click on this link to reset your p
  * Set the absolute URL to register.php, necessary for email verification links
  */
 define("EMAIL_VERIFICATION_URL", getenv('YOURSITE') . "register");
-define("EMAIL_VERIFICATION_FROM", "no-reply@iantearle.com");
-define("EMAIL_VERIFICATION_FROM_NAME", "Creator");
-define("EMAIL_VERIFICATION_SUBJECT", "Account activation for Creator");
+define("EMAIL_VERIFICATION_FROM", "support@littlepolarapps.com");
+define("EMAIL_VERIFICATION_FROM_NAME", "Whosername");
+define("EMAIL_VERIFICATION_SUBJECT", "Account activation for Whosername");
 define("EMAIL_VERIFICATION_CONTENT", "Please click on this link to activate your account:");
 
 /**
