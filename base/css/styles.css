@@ -31,7 +31,6 @@ header.full p {
 	text-shadow: 0 1px 0 rgba(0,91,103,.3);
 	color: #fff;
 	font-weight: 300;
-	margin-top: 50px;
 }
 
 /*---------------Margins-----------------------*/
@@ -96,6 +95,9 @@ header.full p {
 
 .navbar-who {
 	font-weight: 100;
+	padding-top: 40px;
+}
+header.full .navbar-who {
 	padding-top: 15%;
 }
 
@@ -125,6 +127,7 @@ header.full p {
     .navbar-brand-centered {
         position: absolute;
         left: 50%;
+        bottom: 0;
         display: block;
         width: 260px;
 		height: 80px;
