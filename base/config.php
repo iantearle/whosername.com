@@ -9,7 +9,7 @@ define('PUBLISHABLE_KEY', getenv('PUBLISHABLE_KEY'));
 define('TOKEN_URI', getenv('TOKEN_URI'));
 define('AUTHORIZE_URI', getenv('AUTHORIZE_URI'));
 
-define('AMOUNT', 500);
+define('AMOUNT', 1200);
 define('CURRENCY', 'gbp');
 
 /**
