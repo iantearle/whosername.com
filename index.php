@@ -208,6 +208,7 @@ $app->map('/subscription', function() use($app, $login, $options) {
 		if(!$options->getOption('stripe_sub_customer')) {
 
 			$app->view->user_vars['header']['title'] = 'Start your subscription';
+			$app->view->user_vars['main']['email'] = $login->getUserEmail();
 			$app->render('subscription.tpl.html');
 
 		} else {
