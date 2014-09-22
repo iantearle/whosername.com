@@ -1,7 +1,7 @@
 <div class="register">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-2 col-sm-offset-5 col-xs-6 col-xs-offset-3 logo">
+			<div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
 
 				{output}
 
@@ -11,7 +11,10 @@
 			<div class="col-sm-6 col-sm-offset-3">
 
 				<h2>Developers Subscription</h2>
+
 				{mis:payment_successful}
+				<p>Are you a developer? Get subscribed access to our API so you can look up usernames from websites or websites from usernames from a comprehensive list for your own app or website.</p>
+				<p>Our subscription is available in XML or JSON format and is limited to 2 requests per minute, but this may change over time.</p>
 				<form method="POST">
 				<input type="hidden" name="subscribe">
 				<script
@@ -23,7 +26,7 @@
 					data-description="Yearly subscription"
 					data-panel-label="Subscribe ({#{{amount}}#})"
 					data-currency="{currency}"
-					data-image="/128x128.png">
+					data-image="{images_folder}/128x128.png">
 				</script>
 				</form>
 				{/mis}
