@@ -102,7 +102,7 @@ $app->map('/', function () use ($options, $login, $app) {
 	if($login->isUserLoggedIn()) {
 
 		$app->view->user_vars['header']['title'] = 'Dashboard';
-		$app->view->set('content', PrepareContent::getDetails($login->getUserId()));
+		$app->view->set('content', PrepareContent::getDetails($login));
 		$app->render('dashboard.tpl.html');
 
 	} else {
@@ -251,7 +251,7 @@ $app->get('/my-api', function() use($app, $login, $options) {
 		if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
 
 			$app->view->user_vars['header']['title'] = 'My API';
-			$app->view->set('content', PrepareContent::getDetails($login->getUserId()));
+			$app->view->set('content', PrepareContent::getDetails($login));
 			$app->render('my-api.tpl.html');
 
 		} else {

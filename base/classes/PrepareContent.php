@@ -32,17 +32,17 @@ class PrepareContent {
 		return $content;
 	}
 
-	public static function getDetails($user_id) {
+	public static function getDetails($login) {
 
 		global $hashids, $options, $content, $database;
 
-		if($options->getOption('stripe_sub_customer')) {
-			$content->api_key = $hashids->encrypt($user_id, 100, 200, 300, $user_id * 3, 600, 700, 800);
+		if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
+			$content->api_key = $hashids->encrypt($login->getUserId(), 100, 200, 300, $login->getUserId() * 3, 600, 700, 800);
 		}
 
 		// Get the largest created date (latest) as usernames and websites may be live on multiple results
 		$database->query("SELECT * FROM `names` t JOIN (SELECT names_url, MAX(names_created) maxVal FROM `names` GROUP BY names_url) t2 ON t.names_created = t2.maxVal AND t.names_url = t2.names_url AND user_id = :user_id");
-		$database->bind(":user_id", $user_id);
+		$database->bind(":user_id", $login->getUserId());
 		$database->execute();
 
 		$user_names_records = $database->resultset();
