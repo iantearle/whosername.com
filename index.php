@@ -31,7 +31,7 @@ $app->config(array(
 ));
 
 $app->view->parserDirectory = dirname(__FILE__) . '/vendor/little-polar-apps/ets';
-$app->view->parserCacheDirectory = dirname(__FILE__) . '/cache';
+$app->view->parserCacheDirectory = dirname(__FILE__) . '/base/cache';
 $app->view->setTemplatesDirectory(dirname(__FILE__) . '/base/templates');
 
 $options = array();
@@ -248,7 +248,7 @@ $app->get('/my-api', function() use($app, $login, $options) {
 
 	if($login->isUserLoggedIn()) {
 
-		if($options->getOption('stripe_sub_customer')) {
+		if($options->getOption('stripe_sub_customer') || $login->user_access_level > 200) {
 
 			$app->view->user_vars['header']['title'] = 'My API';
 			$app->view->set('content', PrepareContent::getDetails($login->getUserId()));
