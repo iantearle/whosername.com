@@ -248,7 +248,7 @@ $app->get('/my-api', function() use($app, $login, $options) {
 
 	if($login->isUserLoggedIn()) {
 
-		if($options->getOption('stripe_sub_customer') || $login->user_access_level > 200) {
+		if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
 
 			$app->view->user_vars['header']['title'] = 'My API';
 			$app->view->set('content', PrepareContent::getDetails($login->getUserId()));

@@ -778,6 +778,11 @@ class PHPLogin
         return $_SESSION['user_id'];
     }
 
+     public function getUserAccessLevel()
+    {
+        return $_SESSION['user_access_level'];
+    }
+
     public function getUserEmail()
     {
         return $_SESSION['user_email'];
