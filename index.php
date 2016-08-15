@@ -91,8 +91,14 @@ $app->view->make_content($content);
 
 $app->view->user_vars['header']['date'] = time();
 
-$app->view->user_vars['main']['captcha'] = WORDING_REGISTRATION_CAPTCHA;
-$app->view->user_vars['main']['remember_me'] = WORDING_REMEMBER_ME;
+$app->view->user_vars['main']['captcha']        = WORDING_REGISTRATION_CAPTCHA;
+$app->view->user_vars['main']['remember_me']    = WORDING_REMEMBER_ME;
+$app->view->user_vars['main']['wording_new_password']    = WORDING_NEW_PASSWORD;
+$app->view->user_vars['main']['wording_new_password_repeat']    = WORDING_NEW_PASSWORD_REPEAT;
+$app->view->user_vars['main']['wording_submit_new_password']    = WORDING_SUBMIT_NEW_PASSWORD;
+$app->view->user_vars['main']['wording_request_password_reset']    = WORDING_REQUEST_PASSWORD_RESET;
+$app->view->user_vars['main']['wording_reset_password']    = WORDING_RESET_PASSWORD;
+$app->view->user_vars['main']['wording_back_to_login']    = WORDING_BACK_TO_LOGIN;
 $app->view->user_vars['main']['output'] = OutputMessages::showMessage();
 
 
@@ -142,9 +148,12 @@ $app->map('/register', function () use ($login, $app) {
 })->via('GET', 'POST');
 
 
-$app->map('/forgot', function () use ($app) {
+$app->map('/forgot', function () use ($app, $login) {
 
-	$app->render('login.reset_password.php');
+	$app->view->set('password_reset_link', $login->isPasswordResetLinkValid());
+
+	$app->view->user_vars['header']['title'] = 'Reset Password';
+	$app->render('reset_password.tpl.html');
 
 })->via('GET', 'POST');
 

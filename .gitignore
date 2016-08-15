@@ -2,3 +2,4 @@ vendor
 .env
 phinx.yml
 config
+.rocketeer
