@@ -2,7 +2,8 @@
 // Composer
 require 'vendor/autoload.php';
 
-Dotenv::load(__DIR__);
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
 
 require 'base/config.php';
 require 'base/classes/PHPLogin.php';
@@ -13,7 +14,7 @@ require 'base/classes/OutputMessages.php';
 require 'base/classes/Serial.php';
 require 'base/lib/pagination.php';
 
-Stripe::setApiKey(API_KEY);
+\Stripe\Stripe::setApiKey(API_KEY);
 
 $app        = new \Slim\Slim();
 $login      = new PHPLogin();

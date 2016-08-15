@@ -24,9 +24,12 @@
 							</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="newsletter" value="1"{set:subscribed} checked{/set}> Subscribe me to the newsletter
+									<input type="checkbox" name="newsletter" value="1"{set:newsletter} checked{/set}> Subscribe me to the newsletter
 								</label>
 							</div>
+							{set:subscribed}
+							<button type="submit" class="btn btn-danger btn-xs" name="unsubscribe">Unsubscribe</button>
+							{/set}
 							<hr>
 							<button type="submit" class="btn btn-primary btn-block btn-lg" name="settings">Save</button>
 						</div>

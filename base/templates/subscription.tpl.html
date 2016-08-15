@@ -15,21 +15,27 @@
 				{mis:payment_successful}
 				<p>Are you a developer? Get subscribed access to our API so you can look up usernames from websites or websites from usernames from a comprehensive list for your own app or website.</p>
 				<p>Our subscription is available in XML or JSON format and is limited to 2 requests per minute, but this may change over time.</p>
-				<form method="POST">
-				<input type="hidden" name="subscribe">
-				<script
-					src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-					data-email="{email}"
-					data-key="{stripe_publishable_key}"
-					data-amount="{amount}"
-					data-label="Subscribe with card"
-					data-name="Whosername"
-					data-description="Yearly subscription"
-					data-panel-label="Subscribe ({#{{amount}}#})"
-					data-currency="{currency}"
-					data-image="{images_folder}128x128.png">
-				</script>
-				</form>
+
+                <form novalidate autocomplete="on" method="POST" id="subscription-form">
+                    <input type="hidden" name="subscribe">
+                    <p class="payment-errors"></p>
+                    <div class="form-group">
+                        <label for="cc-number" class="control-label sr-only">Card Number</label>
+                        <input id="cc-number" type="tel" class="input-lg form-control cc-number" autocomplete="cc-number" placeholder="Card number" data-stripe="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cc-exp" class="control-label sr-only">Card Expiry</label>
+                        <label for="cc-cvc" class="control-label sr-only">Card Security Number</label>
+                        <div class="input-group">
+                            <input id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" placeholder="MM / YY" onfocus="this.value = this.value;" required>
+                            <span class="input-group-btn" style="width:0px;"></span>
+                            <input id="cc-cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="CVC" data-stripe="cvc" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+
+                    <p class="validation"></p>
+                </form>
 				{/mis}
 
 			</div>
@@ -41,28 +47,4 @@
 <script type="text/javascript">
 	// This identifies your website in the createToken call below
 	Stripe.setPublishableKey('{stripe_publishable_key}');
-
-	Stripe.card.createToken({
-		number: $('.card-number').val(),
-		cvc: $('.card-cvc').val(),
-		exp_month: $('.card-expiry-month').val(),
-		exp_year: $('.card-expiry-year').val()
-	}, stripeResponseHandler);
-
-	function stripeResponseHandler(status, response) {
-		var $form = $('#payment-form');
-
-		if(response.error) {
-			// Show the errors on the form
-			$form.find('.payment-errors').text(response.error.message);
-			$form.find('button').prop('disabled', false);
-		} else {
-			// response contains id and card, which contains additional card details
-			var token = response.id;
-			// Insert the token into the form so it gets submitted to the server
-			$form.append($('<input type="hidden" name="stripeToken" />').val(token));
-			// and submit
-			$form.get(0).submit();
-		}
-	}
 </script>

@@ -58,7 +58,8 @@ class PrepareContent {
 		global $hashids, $options, $content, $database;
 
 		$content->change_emails = $options->getOption('change_emails');
-		$content->subscribed = $options->getOption('subsribe');
+		$content->newsletter = $options->getOption('subsribe');
+		$content->subscribed = (!$options->getOption('stripe_sub_customer')) ? false : true;
 
 		return $content;
 

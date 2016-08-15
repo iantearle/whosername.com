@@ -51,29 +51,49 @@ if($_POST) {
 
 			$token = $_POST['stripeToken'];
 
-			$customer = Stripe_Customer::create(array(
+			$customer = \Stripe\Customer::create(array(
 				"description" => "Customer for " . $login->getUserEmail(),
 				"card" => $token // obtained with Stripe.js
 			));
 
-			$cu = Stripe_Customer::retrieve($customer->id);
-			$cu->subscriptions->create(array("plan" => "whosername12"));
+			$subscription = \Stripe\Subscription::create(
+			    array(
+    			    "customer" => $customer->id,
+			        "plan" => "whosername12"
+                )
+			);
 
 			$options->setOption('stripe_sub_customer', $customer->id);
+			$options->setOption('stripe_sub_id', $subscription->id);
 
 			$app->view->user_vars['main']['payment_successful'] = true;
-			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+			$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+	 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			OutputMessages::setMessage('Your payment was successful.', 'success');
 			exit;
 
 		} catch (Exception $e) {
 
 	 		OutputMessages::setMessage($e->getMessage(), 'danger');
-	 		header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+	 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+	 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			exit;
 
 		}
 
+	}
+
+	if(isset($_POST['unsubscribe'])) {
+    	$subscription = \Stripe\Subscription::retrieve($options->getOption('stripe_sub_id'));
+        $subscription->cancel();
+
+        $options->deleteOption('stripe_sub_customer');
+		$options->deleteOption('stripe_sub_id');
+
+        OutputMessages::setMessage('You have successfully canceled your subscription.', 'success');
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+ 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+		exit;
 	}
 
 	if(isset($_POST['settings'])) {
@@ -90,7 +110,8 @@ if($_POST) {
 			$options->deleteOption('subsribe');
 		}
 
-		header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+ 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 		OutputMessages::setMessage('Settings saved successfully.', 'success');
 		exit;
 
@@ -181,7 +202,8 @@ if($_POST) {
 
 		if($checkAmount >= 4) {
 			OutputMessages::setMessage('<b>A username has to be associated</b><br>At least one username must be entered. Having trouble? Try our support channels', 'danger');
-			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+			$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+	 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			exit;
 		}
 
@@ -197,13 +219,15 @@ if($_POST) {
 			$database->execute();
 
 			OutputMessages::setMessage('<b>Super</b>. That\'s another username added to the list.', 'success');
-			header('Location: http://' . $_SERVER['HTTP_HOST'] . '/edit', true, 303);
+			$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+	 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			exit;
 
 		} catch(Exception $e) {
 
 			OutputMessages::setMessage('<b>We failed to save that, with the following error.</b><br>' . $e->getMessage(), 'danger');
-			header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
+			$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+	 		header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 303);
 			exit;
 		}
 

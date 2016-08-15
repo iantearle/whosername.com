@@ -2,6 +2,9 @@
 session_start();
 date_default_timezone_set('Europe/London');
 
+define('ETS_TEMPLATESPATH', dirname(__FILE__) . '/templates');
+define('ETS_THEMEFILEPATH', dirname(__FILE__));
+
 define('CLIENT_ID', getenv('CLIENT_ID'));
 define('API_KEY', getenv('API_KEY'));
 define('PUBLISHABLE_KEY', getenv('PUBLISHABLE_KEY'));
