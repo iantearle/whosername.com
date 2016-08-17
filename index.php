@@ -8,6 +8,7 @@ $dotenv->load();
 require 'base/config.php';
 require 'base/classes/PHPLogin.php';
 require 'base/classes/Database.php';
+require 'base/classes/APIRateLimit.php';
 require 'base/classes/Options.php';
 require 'base/classes/PrepareContent.php';
 require 'base/classes/OutputMessages.php';
@@ -16,7 +17,40 @@ require 'base/lib/pagination.php';
 
 \Stripe\Stripe::setApiKey(API_KEY);
 
-$app        = new \Slim\Slim();
+$container = new \Slim\Container([
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+]);
+
+$container['view'] = function ($c) {
+    $view = new \Slim\Views\Ets();
+
+    $view->user_vars['header']['date'] = time();
+    $view->user_vars['main']['captcha']        = WORDING_REGISTRATION_CAPTCHA;
+    $view->user_vars['main']['remember_me']    = WORDING_REMEMBER_ME;
+    $view->user_vars['main']['wording_new_password']    = WORDING_NEW_PASSWORD;
+    $view->user_vars['main']['wording_new_password_repeat']    = WORDING_NEW_PASSWORD_REPEAT;
+    $view->user_vars['main']['wording_submit_new_password']    = WORDING_SUBMIT_NEW_PASSWORD;
+    $view->user_vars['main']['wording_request_password_reset']    = WORDING_REQUEST_PASSWORD_RESET;
+    $view->user_vars['main']['wording_reset_password']    = WORDING_RESET_PASSWORD;
+    $view->user_vars['main']['wording_back_to_login']    = WORDING_BACK_TO_LOGIN;
+    $view->user_vars['main']['output']  = OutputMessages::showMessage();
+
+    return $view;
+};
+
+$container['notFound'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c->view->render($response, "404.tpl.html");
+    };
+};
+
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
+};
+
+$app        = new \Slim\App($container);
 $login      = new PHPLogin();
 $database   = new Database();
 $header     = new stdClass();
@@ -26,14 +60,8 @@ $menu       = new stdClass();
 $addExtras  = new stdClass();
 $hashids 	= new Hashids\Hashids('Who am I');
 
-$app->config(array(
-	'view' => new Ets(),
-    'templates.path' => 'base/templates'
-));
-
-$app->view->parserDirectory = dirname(__FILE__) . '/vendor/little-polar-apps/ets';
-$app->view->parserCacheDirectory = dirname(__FILE__) . '/base/cache';
-$app->view->setTemplatesDirectory(dirname(__FILE__) . '/base/templates');
+$app->parserDirectory = dirname(__FILE__) . '/vendor/little-polar-apps/ets';
+$app->parserCacheDirectory = dirname(__FILE__) . '/base/cache';
 
 $options = array();
 
@@ -55,6 +83,13 @@ if($login->isUserLoggedIn()) {
 }
 
 require 'base/functions/post.php';
+$app->header         = new stdClass();
+$app->menu           = new stdClass();
+$app->footer         = new stdClass();
+$app->main           = new stdClass();
+$app->content        = PrepareContent::getInstance();
+$content    		 = new stdClass();
+$menu       		 = new stdClass();
 
 $addExtras->version = '&Beta;0.1.';
 $addExtras->yoursite = YOURSITE;
@@ -74,60 +109,51 @@ $addExtras->currency = CURRENCY;
 
 foreach($addExtras as $xp => $xv) {
 
-	$header->{$xp} = $xv;
-	$footer->{$xp} = $xv;
-	$menu->{$xp} = $xv;
+	$app->header->{$xp} = $xv;
+	$app->footer->{$xp} = $xv;
+	$app->menu->{$xp} = $xv;
 	$xmlvars[$xp] = $xv;
-	$content->{$xp} = $xv;
+	$app->content->{$xp} = $xv;
 
 }
 
-$app->view->set('options', $options);
-$app->view->set('login', $login);
-$app->view->set('database', $database);
-$app->view->make_header($header);
-$app->view->make_menu($header);
-$app->view->make_footer($header);
-$app->view->make_content($content);
+// $app->view->set('options', $options);
+// $app->view->set('login', $login);
+// $app->view->set('database', $database);
 
-$app->view->user_vars['header']['date'] = time();
+$app->map(['GET', 'POST'], '/', function ($request, $response, $args) use ($options, $login, $app) {
 
-$app->view->user_vars['main']['captcha']        = WORDING_REGISTRATION_CAPTCHA;
-$app->view->user_vars['main']['remember_me']    = WORDING_REMEMBER_ME;
-$app->view->user_vars['main']['wording_new_password']    = WORDING_NEW_PASSWORD;
-$app->view->user_vars['main']['wording_new_password_repeat']    = WORDING_NEW_PASSWORD_REPEAT;
-$app->view->user_vars['main']['wording_submit_new_password']    = WORDING_SUBMIT_NEW_PASSWORD;
-$app->view->user_vars['main']['wording_request_password_reset']    = WORDING_REQUEST_PASSWORD_RESET;
-$app->view->user_vars['main']['wording_reset_password']    = WORDING_RESET_PASSWORD;
-$app->view->user_vars['main']['wording_back_to_login']    = WORDING_BACK_TO_LOGIN;
-$app->view->user_vars['main']['output'] = OutputMessages::showMessage();
-
-
-$app->map('/', function () use ($options, $login, $app) {
-
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
 
 	if($login->isUserLoggedIn()) {
 
-		$app->view->user_vars['header']['title'] = 'Dashboard';
-		$app->view->set('content', PrepareContent::getDetails($login));
-		$app->render('dashboard.tpl.html');
+		$this->view->user_vars['header']['title'] = 'Dashboard';
+		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getDetails($login)));
+		$this->view->render($response, 'dashboard.tpl.html');
 
 	} else {
 
-		$app->view->user_vars['header']['title'] = 'Home';
-		$app->render('home.tpl.html');
+		$this->view->user_vars['header']['title'] = 'Home';
+		return $this->view->render($response, 'home.tpl.html');
 
 	}
 
-})->via('GET', 'POST');
+});
 
 
-$app->map('/login', function () use ($app) {
+$app->map(['GET', 'POST'], '/login', function ($request, $response, $args) use ($app) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
     $app->view->user_vars['header']['title'] = 'Login';
-	$app->render('login.tpl.html');
+	return $this->view->render($response, 'login.tpl.html');
 
-})->via('GET', 'POST');
+})->setName('login');
 
 
 $app->get('/logout', function () use ($login, $app) {
@@ -137,154 +163,193 @@ $app->get('/logout', function () use ($login, $app) {
 	header("location: ". YOURSITE);
 	exit;
 
-});
+})->setName('logout');;
 
-$app->map('/register', function () use ($login, $app) {
+$app->map(['GET', 'POST'], '/register', function ($request, $response, $args) use ($login, $app) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
     $app->view->user_vars['header']['title'] = 'Register';
 	$app->view->user_vars['main']['registration_successful'] = (isset($_GET['verification_code']) || $login->isRegistrationSuccessful() &&
    (ALLOW_USER_REGISTRATION || (ALLOW_ADMIN_TO_REGISTER_NEW_USER && $_SESSION['user_access_level'] == 255))) ? true : null;
 	$app->view->user_vars['main']['registration_verified'] = (isset($_GET['verification_code'])) ? true : null;
 
-	$app->render('register.tpl.html');
+	return $this->view->render($response, 'register.tpl.html');
 
-})->via('GET', 'POST');
+})->setName('register');
 
 
-$app->map('/forgot', function () use ($app, $login) {
+$app->map(['GET', 'POST'], '/forgot', function ($request, $response, $args) use ($app, $login) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
 	$app->view->set('password_reset_link', $login->isPasswordResetLinkValid());
 
 	$app->view->user_vars['header']['title'] = 'Reset Password';
-	$app->render('reset_password.tpl.html');
+	return $this->view->render($response, 'reset_password.tpl.html');
 
-})->via('GET', 'POST');
+})->setName('forgot');
 
 
-$app->map('/add', function () use ($app, $login) {
+$app->map(['GET', 'POST'], '/add', function ($request, $response, $args) use ($app, $login) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
 	$app->view->user_vars['header']['title'] = 'Add a username';
 
 	if($login->isUserLoggedIn()) {
 
-		$app->render('add.tpl.html');
+		return $this->view->render($response, 'add.tpl.html');
 
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-})->via('GET', 'POST');
+})->setName('add');
 
-$app->get('/edit', function() use($app, $login, $options) {
+$app->get('/edit', function ($request, $response, $args) use($app, $login, $options) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
 
 	if($login->isUserLoggedIn()) {
 
-		$app->view->set('content', PrepareContent::getResultsForEdit());
-		$app->render('edit_full.tpl.html');
+		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getResultsForEdit()));
 
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-});
+	return $this->view->render($response, 'edit_full.tpl.html');
 
-$app->map('/edit/:id', function($id) use ($app, $login) {
+})->setName('edit');
+
+$app->map(['GET', 'POST'], '/edit/{id}', function ($request, $response, $args) use ($app, $login) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
 	$app->view->user_vars['header']['title'] = 'Edit a username';
 
 	if($login->isUserLoggedIn()) {
 
-		$app->view->set('content', PrepareContent::getResultsForEdit($id));
-		$app->render('edit.tpl.html');
+		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getResultsForEdit($args['id'])));
+		return $this->view->render($response, 'edit.tpl.html');
 
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-})->via('GET', 'POST');
+});
 
 
-$app->map('/subscription', function() use($app, $login, $options) {
+$app->map(['GET', 'POST'], '/subscription', function ($request, $response, $args) use($app, $login, $options) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
 
 	if($login->isUserLoggedIn()) {
 
-		if(!$options->getOption('stripe_sub_customer')) {
+        if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
+            return $response->withRedirect($this->router->pathFor('api'));
+        } else {
 
-			$app->view->user_vars['header']['title'] = 'Start your subscription';
+    		$app->view->user_vars['header']['title'] = 'Start your subscription';
 			$app->view->user_vars['main']['email'] = $login->getUserEmail();
-			$app->render('subscription.tpl.html');
-
-		} else {
-
-			$app->redirect('/');
-
-		}
+			return $this->view->render($response, 'subscription.tpl.html');
+        }
 
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-})->via('GET', 'POST');
+})->setName('subscription');
 
-$app->map('/settings', function() use($app, $login, $options) {
+$app->map(['GET', 'POST'], '/settings', function ($request, $response, $args) use($app, $login, $options) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
 
 	if($login->isUserLoggedIn()) {
 
 		$app->view->user_vars['header']['title'] = 'Settings';
-		$app->view->set('content', PrepareContent::getSettings($login->getUserId()));
-		$app->render('settings.tpl.html');
+		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getSettings($login->getUserId())));
+		return $this->view->render($response, 'settings.tpl.html');
 
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-})->via('GET', 'POST');
+})->setName('settings');
 
 
-$app->get('/my-api', function() use($app, $login, $options) {
+$app->get('/my-api', function ($request, $response, $args) use($app, $login, $options) {
+
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
 
 	if($login->isUserLoggedIn()) {
 
 		if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
 
 			$app->view->user_vars['header']['title'] = 'My API';
-			$app->view->set('content', PrepareContent::getDetails($login));
-			$app->render('my-api.tpl.html');
+			$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getDetails($login)));
+			return $this->view->render($response, 'my-api.tpl.html');
 
 		} else {
 
-			$app->redirect('/subscription');
+			return $response->withRedirect($this->router->pathFor('subscription'));
 
 		}
 	} else {
 
-		$app->flash('error', 'Login required');
-		$app->redirect('/login');
+		$this->flash->addMessage('error', 'Login required');
+		return $response->withRedirect($this->router->pathFor('login'));
 
 	}
 
-});
+})->setName('myapi');
 
-$app->get('/api/:api_key/:url(/:format)', function ($api_key, $url, $format = null) use ($content, $hashids, $database, $app) {
+$app->get('/api/{api_key}/{url}/{format}', function ($request, $response, $args)  use ($content, $hashids, $database, $app) { //($api_key, $url, $format = null)
 
-	$hash = $hashids->decrypt($api_key);
+	$hash = $hashids->decrypt($args['api_key']);
 
-	$database->query("SELECT * FROM users WHERE user_id = :id");
+    if(!$hash) {
+        return $response->withStatus(403)->withHeader('AuthenticationFailed', 'Server failed to authenticate the request. Make sure the value of the Authorisation header is formed correctly including the signature.');
+    }
+
+    $database->query("SELECT * FROM users WHERE user_id = :id");
 	$database->bind(":id", $hash[0]);
 	$database->execute();
 
@@ -292,58 +357,82 @@ $app->get('/api/:api_key/:url(/:format)', function ($api_key, $url, $format = nu
 
 	if($count) {
 
-		switch($format) {
+		switch($args['format']) {
 
 			case 'json':
 
-				$app->view->user_vars['main']['type'] = 'json';
-				$app->view->set('content', PrepareContent::getResults($api_key, $url));
-				$app->response()->header('Content-Type', 'application/json');
-				$app->render(array('api.tpl.html'));
+				$this->view->user_vars['main']['type'] = 'json';
+				$content = PrepareContent::getResults($args['api_key'], $args['url']);
+				$this->view->make_content($content);
+				if(empty($content->content)) {
+                    return $this->view->render($response->withStatus(404), array('api.tpl.html'))->withHeader('Content-Type', 'application/json');
+				} else {
+                    return $this->view->render($response, array('api.tpl.html'))->withHeader('Content-Type', 'application/json');
+				}
 				break;
 
 			case 'xml':
 
-				$app->view->user_vars['main']['type'] = 'xml';
-				$app->view->set('content', PrepareContent::getResults($api_key, $url));
-				$app->response()->header('Content-Type', 'application/xml');
-				$app->render(array('api.tpl.html'));
+				$this->view->user_vars['main']['type'] = 'xml';
+				$content = PrepareContent::getResults($args['api_key'], $args['url']);
+				$this->view->make_content($content);
+				if(empty($content->content)) {
+                    return $this->view->render($response->withStatus(404), array('api.tpl.html'))->withHeader('Content-Type', 'application/xml');
+				} else {
+                    return $this->view->render($response, array('api.tpl.html'))->withHeader('Content-Type', 'application/xml');
+				}
 				break;
 
 			default:
-				$app->notFound();
+				return $response->withStatus(400)->withHeader('InvalidUri', 'The requested URI does not represent any resource on the server.');
 				break;
 
 		}
 
-
-
 	} else {
 
-		$app->notFound();
+        return $response->withStatus(403)->withHeader('AuthenticationFailed', 'Server failed to authenticate the request. Make sure the value of the Authorisation header is formed correctly including the signature.');
 
 	}
 
+})->add(function ($request, $response, $next) {
+
+    $requests = 100; // maximum number of requests
+    $inmins = 60;    // in how many time (minutes)
+
+    $APIRateLimit = new APIRateLimit($requests, $inmins);
+    $mustbethrottled = $APIRateLimit();
+
+    if ($mustbethrottled == false) {
+        return $next($request, $response);
+    } else {
+        return $response->withStatus(429)->withHeader('RateLimit-Limit', $requests);
+    }
 });
 
-$app->get('/changelog', function() use($app) {
+$app->get('/changelog', function ($request, $response, $args) use($app) {
 
-	$app->render('changelog.tpl.html');
+    $this->view->make_header($app->header);
+    $this->view->make_menu($app->header);
+    $this->view->make_footer($app->header);
+    $this->view->make_content($app->content);
+
+	return $this->view->render($response, 'changelog.tpl.html');
 
 });
 
-$app->get('/javascript/:files', function($files) use($app) {
+$app->get('/javascript/{files}', function ($request, $response, $args) use($app) {
 
 	$_GET['type'] = 'javascript';
-	$_GET['files'] = $files;
+	$_GET['files'] = $args['files'];
 	include('base/functions/combine.php');
 
 });
 
-$app->get('/css/:files', function($files) use($app) {
+$app->get('/css/{files}', function ($request, $response, $args) use($app) {
 
 	$_GET['type'] = 'css';
-	$_GET['files'] = $files;
+	$_GET['files'] = $args['files'];
 	include('base/functions/combine.php');
 
 });
