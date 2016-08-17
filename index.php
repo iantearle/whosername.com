@@ -124,6 +124,7 @@ $app->map('/', function () use ($options, $login, $app) {
 
 $app->map('/login', function () use ($app) {
 
+    $app->view->user_vars['header']['title'] = 'Login';
 	$app->render('login.tpl.html');
 
 })->via('GET', 'POST');
@@ -140,6 +141,7 @@ $app->get('/logout', function () use ($login, $app) {
 
 $app->map('/register', function () use ($login, $app) {
 
+    $app->view->user_vars['header']['title'] = 'Register';
 	$app->view->user_vars['main']['registration_successful'] = (isset($_GET['verification_code']) || $login->isRegistrationSuccessful() &&
    (ALLOW_USER_REGISTRATION || (ALLOW_ADMIN_TO_REGISTER_NEW_USER && $_SESSION['user_access_level'] == 255))) ? true : null;
 	$app->view->user_vars['main']['registration_verified'] = (isset($_GET['verification_code'])) ? true : null;
