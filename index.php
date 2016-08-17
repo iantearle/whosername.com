@@ -397,7 +397,7 @@ $app->get('/api/{api_key}/{url}/{format}', function ($request, $response, $args)
 
 })->add(function ($request, $response, $next) {
 
-    $requests = 100; // maximum number of requests
+    $requests = 250; // maximum number of requests
     $inmins = 60;    // in how many time (minutes)
 
     $APIRateLimit = new APIRateLimit($requests, $inmins);
