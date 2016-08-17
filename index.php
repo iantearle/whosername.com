@@ -189,9 +189,9 @@ $app->map(['GET', 'POST'], '/forgot', function ($request, $response, $args) use 
     $this->view->make_footer($app->header);
     $this->view->make_content($app->content);
 
-	$app->view->set('password_reset_link', $login->isPasswordResetLinkValid());
+	$this->view->user_vars['main']['password_reset_link'] = $login->isPasswordResetLinkValid();
 
-	$app->view->user_vars['header']['title'] = 'Reset Password';
+	$this->view->user_vars['header']['title'] = 'Reset Password';
 	return $this->view->render($response, 'reset_password.tpl.html');
 
 })->setName('forgot');
@@ -204,7 +204,7 @@ $app->map(['GET', 'POST'], '/add', function ($request, $response, $args) use ($a
     $this->view->make_footer($app->header);
     $this->view->make_content($app->content);
 
-	$app->view->user_vars['header']['title'] = 'Add a username';
+	$this->view->user_vars['header']['title'] = 'Add a username';
 
 	if($login->isUserLoggedIn()) {
 
@@ -226,7 +226,7 @@ $app->get('/edit', function ($request, $response, $args) use($app, $login, $opti
     $this->view->make_footer($app->header);
 
 	if($login->isUserLoggedIn()) {
-
+        $this->view->user_vars['header']['title'] = 'Edit a username';
 		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getResultsForEdit()));
 
 	} else {
@@ -247,7 +247,7 @@ $app->map(['GET', 'POST'], '/edit/{id}', function ($request, $response, $args) u
     $this->view->make_footer($app->header);
     $this->view->make_content($app->content);
 
-	$app->view->user_vars['header']['title'] = 'Edit a username';
+	$this->view->user_vars['header']['title'] = 'Edit a username';
 
 	if($login->isUserLoggedIn()) {
 
@@ -299,7 +299,7 @@ $app->map(['GET', 'POST'], '/settings', function ($request, $response, $args) us
 
 	if($login->isUserLoggedIn()) {
 
-		$app->view->user_vars['header']['title'] = 'Settings';
+		$this->view->user_vars['header']['title'] = 'Settings';
 		$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getSettings($login->getUserId())));
 		return $this->view->render($response, 'settings.tpl.html');
 
@@ -323,7 +323,7 @@ $app->get('/my-api', function ($request, $response, $args) use($app, $login, $op
 
 		if($options->getOption('stripe_sub_customer') || $login->getUserAccessLevel() >= 200) {
 
-			$app->view->user_vars['header']['title'] = 'My API';
+			$this->view->user_vars['header']['title'] = 'My API';
 			$this->view->make_content($app->content->prepareContent($app->content, PrepareContent::getDetails($login)));
 			return $this->view->render($response, 'my-api.tpl.html');
 
