@@ -91,7 +91,7 @@ $app->content        = PrepareContent::getInstance();
 $content    		 = new stdClass();
 $menu       		 = new stdClass();
 
-$addExtras->version = '&Beta;0.1.';
+$addExtras->version = '&Beta;0.2.';
 $addExtras->yoursite = YOURSITE;
 $addExtras->copyrightdate = isset($addExtras->copyrightdate) ? $addExtras->copyrightdate : date('Y');
 $addExtras->logged_in = $login->isUserLoggedIn();
