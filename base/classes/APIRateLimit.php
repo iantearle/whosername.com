@@ -49,6 +49,12 @@ class APIRateLimit
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute( [$this->originip] );
 
+        if(date('H') % 2 == 0) {
+            $dsql = "DELETE FROM {$this->table} WHERE originip = ? AND ts < (now() - INTERVAL 2 HOUR)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute( [$this->originip] );
+        }
+
         if ($stmt) {
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         } else {
