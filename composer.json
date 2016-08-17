@@ -11,10 +11,11 @@
         "mandrill/mandrill": "1.0.*",
         "robmorgan/phinx": "*",
         "hashids/hashids": "0.3.*@dev",
-        "slim/slim": "2.*",
+        "slim/slim": "3.*",
         "slim/views": "0.1.*",
         "stripe/stripe-php": "^3.20",
-        "little-polar-apps/ets": "dev-master",
-		"little-polar-apps/ets-view": "dev-master"
+        "little-polar-apps/ets": "1.0.0.x-dev",
+        "little-polar-apps/ets-view": "2.0.x-dev",
+        "slim/flash": "^0.1.0"
     }
 }
