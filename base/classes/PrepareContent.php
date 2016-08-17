@@ -7,9 +7,18 @@ class PrepareContent {
 	private static $timeoffset = 8;
 	public static $count = -1;
 
+    private static $_instance;
+
 	public function __construct() {
 
 	}
+
+	public static function getInstance() {
+        if (!self::$_instance) {
+            self::$_instance = new PrepareContent();
+        }
+        return self::$_instance;
+    }
 
 	public static function get($section) {
 
@@ -20,6 +29,16 @@ class PrepareContent {
 		return $array;
 
 	}
+
+    public function prepareContent($arg = array(), $content, $paginate=1) {
+
+		$page = $arg;
+
+	    $page->content = $content;
+
+	    return $page;
+
+    }
 
 	private static function assignContent($content, $extraVars = array()) {
 
@@ -58,7 +77,7 @@ class PrepareContent {
 		global $hashids, $options, $content, $database;
 
 		$content->change_emails = $options->getOption('change_emails');
-		$content->newsletter = $options->getOption('subsribe');
+		$content->newsletter = $options->getOption('subscribe');
 		$content->subscribed = (!$options->getOption('stripe_sub_customer')) ? false : true;
 
 		return $content;
@@ -70,7 +89,7 @@ class PrepareContent {
 
 		global $hashids, $content, $database;
 
-		$page = $content;
+		$page = new stdClass();
 
 		// Get the largest created date (latest) as usernames and websites may be live on multiple results
 		$database->query("SELECT * FROM `names` t JOIN (SELECT names_url, MAX(names_created) maxVal FROM `names` WHERE names_live = 1 GROUP BY names_url) t2 ON t.names_created = t2.maxVal AND t.names_url = t2.names_url AND :url IN(t.names_url, names_twitter, names_facebook, names_linkedin, names_googleplus)");
@@ -95,15 +114,15 @@ class PrepareContent {
 
 		}
 
-		return $content;
+		$page->content = $content;
+
+		return $page;
 
 	}
 
 	public static function getResultsForEdit($id=null) {
 
 		global $content, $database;
-
-		$page = &$content;
 
 		if($id) {
 
@@ -139,7 +158,6 @@ class PrepareContent {
 			$content[$k]->permalink = YOURSITE . 'edit/' . $itemObj->id;
 
 		}
-
 		return $content;
 
 	}
