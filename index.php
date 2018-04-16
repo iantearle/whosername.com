@@ -163,7 +163,7 @@ $app->get('/logout', function () use ($login, $app) {
 	header("location: ". YOURSITE);
 	exit;
 
-})->setName('logout');;
+})->setName('logout');
 
 $app->map(['GET', 'POST'], '/register', function ($request, $response, $args) use ($login, $app) {
 
@@ -184,10 +184,17 @@ $app->map(['GET', 'POST'], '/register', function ($request, $response, $args) us
 
 $app->map(['GET', 'POST'], '/forgot', function ($request, $response, $args) use ($app, $login) {
 
+    $app->content->username = $_GET['user_name'];
+    $app->content->verification_code = $_GET['verification_code'];
+
     $this->view->make_header($app->header);
     $this->view->make_menu($app->header);
     $this->view->make_footer($app->header);
     $this->view->make_content($app->content);
+
+    if(isset($_POST["submit_new_password"])) {
+      return $response->withRedirect($this->router->pathFor('login'));
+    }
 
 	$this->view->user_vars['main']['password_reset_link'] = $login->isPasswordResetLinkValid();
 
