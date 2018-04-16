@@ -81,7 +81,7 @@ define("COOKIE_SECRET_KEY", "1gp@TMPS{+$78sfpMJFe-92s");
  * It's really recommended to use SMTP!
  *
  */
-define("EMAIL_USE_SMTP", true);
+define("EMAIL_USE_SMTP", false);
 define("EMAIL_SMTP_HOST", "smtp.mandrillapp.com");
 define("EMAIL_SMTP_AUTH", true);
 define("EMAIL_SMTP_USERNAME", getenv('EMAIL_USERNAME'));
