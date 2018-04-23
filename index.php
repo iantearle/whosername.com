@@ -19,7 +19,7 @@ require 'base/lib/pagination.php';
 
 $container = new \Slim\Container([
     'settings' => [
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => false,
     ],
 ]);
 
